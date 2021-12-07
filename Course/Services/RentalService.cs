@@ -8,11 +8,12 @@ namespace Course.Services
     class RentalService
     {
 
-        private BrazilTaxService _brazilTaxService = new BrazilTaxService();
-        public RentalService(double pricePerHour, double pricePerDay)
+        private ITaxService _taxService;
+        public RentalService(double pricePerHour, double pricePerDay, ITaxService taxService)
         {
             PricePerHour = pricePerHour;
             PricePerDay = pricePerDay;
+            _taxService = taxService;
         }
 
         public double PricePerHour { get; private set; }
@@ -29,7 +30,7 @@ namespace Course.Services
             {
                 basicPayment = PricePerDay * Math.Ceiling(duration.TotalDays);
             }
-            double tax = _brazilTaxService.Tax(basicPayment);
+            double tax = _taxService.Tax(basicPayment);
 
             carRental.Invoice = new Invoice(basicPayment, tax);
 
